@@ -20,6 +20,14 @@ app.get("/", (req, res) => {
     res.send("Hello world!");
 });
 
+// Game loop interval (update every second)
+const gameLoopInterval = setInterval(() => {
+    // Update the game state
+
+    // Broadcast the updated game state to all connected clients
+    io.emit("game_state", { counter: gameCounter });
+}, 1000 / 60);
+
 io.on("connection", (socket) => {
     console.log("A user connected");
 

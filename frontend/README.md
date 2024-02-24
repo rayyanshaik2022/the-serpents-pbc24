@@ -9,3 +9,4 @@ React + Vite
   * `npm i`
 * Run test / dev server
   * `npm run dev`
+* Working file is "App.jsx" (modify this)

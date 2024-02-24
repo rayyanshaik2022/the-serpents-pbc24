@@ -1,8 +1,9 @@
 const config = require("../config.js");
+const helpers = require("../helpers.js");
 
 class Ship {
     constructor () {
-        this.position = [0, 0];
+        this.position = helpers.GEN_SPAWN_LOC;
         this.velocity = [0, 0];
         
         this.tokens = []

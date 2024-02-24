@@ -7,10 +7,10 @@ export class MainGame extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('player', 'assets/player.png');
-        this.load.image('playerShooting', 'assets/playerShooting.png');
+        this.load.image('player', 'public/assets/player.png');
+        this.load.image('playerShooting', 'public/assets/playerShooting.png');
         // this.load.image('item', 'assets/item-image.png');
-        this.load.image('cannonball', 'assets/cannonball.png');
+        this.load.image('cannonball', 'public/assets/cannonball.png');
         // this.load.image('refillPad', 'assets/refill-pad-image.png');
     }
 
@@ -20,7 +20,7 @@ export class MainGame extends Phaser.Scene {
         this.physics.world.bounds.width = 1600;
         this.physics.world.bounds.height = 1200;
 
-        this.player = this.physics.add.sprite(400, 300, 'player').setOrigin(0.5, 0.5).setScale(0.1);
+        this.player = this.physics.add.sprite(400, 300, 'player').setOrigin(0.5, 0.5).setScale(.1);
         this.player.body.setCollideWorldBounds(true);
 
         this.cameras.main.startFollow(this.player, true, 0.05, 0.05);
@@ -74,7 +74,7 @@ export class MainGame extends Phaser.Scene {
     shootCannonball(pointer) {
         var cannonball = this.cannonballs.get(this.player.x, this.player.y);
         if (cannonball) {
-            cannonball.setScale(0.05);
+            cannonball.setScale(.1);
             cannonball.body.enable = true;
             cannonball.setActive(true).setVisible(true);
 

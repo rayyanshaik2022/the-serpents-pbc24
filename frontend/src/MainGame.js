@@ -4,13 +4,15 @@ import Phaser from 'phaser';
 export class MainGame extends Phaser.Scene {
     constructor() {
         super({ key: 'MainGame' });
+        this.ammoCount = 10; // Example initial ammo count
+
     }
 
     preload() {
-        this.load.image('player', 'public/assets/player.png');
-        this.load.image('playerShooting', 'public/assets/playerShooting.png');
+        this.load.image('player', 'assets/player.png');
+        this.load.image('playerShooting', 'assets/playerShooting.png');
         // this.load.image('item', 'assets/item-image.png');
-        this.load.image('cannonball', 'public/assets/cannonball.png');
+        this.load.image('cannonball', 'assets/cannonball.png');
         // this.load.image('refillPad', 'assets/refill-pad-image.png');
     }
 
@@ -33,13 +35,6 @@ export class MainGame extends Phaser.Scene {
             right: Phaser.Input.Keyboard.KeyCodes.D
         });
 
-        this.items = this.physics.add.group();
-        for (let i = 0; i < 50; i++) {
-            const x = Phaser.Math.Between(0, this.physics.world.bounds.width);
-            const y = Phaser.Math.Between(0, this.physics.world.bounds.height);
-            this.items.create(x, y, 'item');
-        }
-
         this.cannonballs = this.physics.add.group({
             defaultKey: 'cannonball',
             maxSize: 10
@@ -59,28 +54,27 @@ export class MainGame extends Phaser.Scene {
             repeat: 5,
             setXY: { x: 100, y: 100, stepX: 200, stepY: 200 }
         });
-
         this.physics.add.overlap(this.player, refillPads, (player, pad) => {
-            pad.disableBody(true, true); // Hide and disable the pad
-            // Replenish the player's cannonballs
-            this.cannonballs.children.iterate((child) => {
-                child.setActive(false).setVisible(false); // Deactivate all cannonballs
-                child.body.enable = false;
-            });
-            // Optionally reset the cannonball count or logic here if necessary
+            pad.disableBody(true, true); // Correctly hide and disable the pad
+            this.ammoCount += 10; // Increase ammo count by 10 (adjust as needed)
+            console.log("Ammo refilled, new count: ", this.ammoCount); // Debugging
         });
+        
     }
 
     shootCannonball(pointer) {
-        var cannonball = this.cannonballs.get(this.player.x, this.player.y);
-        if (cannonball) {
-            cannonball.setScale(.1);
-            cannonball.body.enable = true;
-            cannonball.setActive(true).setVisible(true);
+        if (this.ammoCount > 0) {
+            var cannonball = this.cannonballs.get(this.player.x, this.player.y);
+            if (cannonball) {
+                cannonball.setScale(.1);
+                cannonball.body.enable = true;
+                cannonball.setActive(true).setVisible(true);
 
-            var angle = Phaser.Math.Angle.Between(this.player.x, this.player.y, pointer.worldX, pointer.worldY);
-            this.physics.velocityFromRotation(angle, 400, cannonball.body.velocity);
-            cannonball.rotation = angle;
+                var angle = Phaser.Math.Angle.Between(this.player.x, this.player.y, pointer.worldX, pointer.worldY);
+                this.physics.velocityFromRotation(angle, 400, cannonball.body.velocity);
+                cannonball.rotation = angle;
+                this.ammoCount--; // Decrease ammo count
+            }
         }
     }
 

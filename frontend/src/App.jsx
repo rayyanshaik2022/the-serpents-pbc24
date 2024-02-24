@@ -21,7 +21,7 @@ function App() {
       scene: [LandingScreen, MainGame],
     };
 
-    new Phaser.Game(config);
+    window.game = new Phaser.Game(config);
 
     // Cleanup function to destroy the game instance when the component unmounts
     return () => {

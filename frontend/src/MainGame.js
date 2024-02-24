@@ -37,7 +37,7 @@ export class MainGame extends Phaser.Scene {
 
         this.cannonballs = this.physics.add.group({
             defaultKey: 'cannonball',
-            maxSize: 10
+            maxSize: -1
         });
 
         this.input.on('pointerdown', (pointer) => {
@@ -56,27 +56,37 @@ export class MainGame extends Phaser.Scene {
         });
         this.physics.add.overlap(this.player, refillPads, (player, pad) => {
             pad.disableBody(true, true); // Correctly hide and disable the pad
-            this.ammoCount += 10; // Increase ammo count by 10 (adjust as needed)
-            console.log("Ammo refilled, new count: ", this.ammoCount); // Debugging
+            this.ammoCount += 10; // Increase ammo count by 10 or reset to a specific value
         });
         
     }
 
     shootCannonball(pointer) {
+        // Check if there's ammo left
         if (this.ammoCount > 0) {
-            var cannonball = this.cannonballs.get(this.player.x, this.player.y);
+            // Get a cannonball from the pool
+            var cannonball = this.cannonballs.get(this.player.x, this.player.y, 'cannonball');
+            
             if (cannonball) {
-                cannonball.setScale(.1);
+                cannonball.setActive(true).setVisible(true); // Activate and show the cannonball
+                
+                // Ensure the physics body is enabled
                 cannonball.body.enable = true;
-                cannonball.setActive(true).setVisible(true);
-
+                cannonball.setScale(0.1); // Adjust the scale as needed
+    
+                // Calculate the angle from the player to the pointer
                 var angle = Phaser.Math.Angle.Between(this.player.x, this.player.y, pointer.worldX, pointer.worldY);
-                this.physics.velocityFromRotation(angle, 400, cannonball.body.velocity);
-                cannonball.rotation = angle;
-                this.ammoCount--; // Decrease ammo count
+                
+                // Set the cannonball's velocity to move it toward the pointer
+                this.physics.velocityFromRotation(angle, 400, cannonball.body.velocity); // Adjust the speed as needed
+                cannonball.rotation = angle; // Optional: Rotate the cannonball to face the direction it's moving
+    
+                // Decrease ammo count after shooting
+                this.ammoCount--;
             }
         }
     }
+    
 
     update() {
         this.player.body.setVelocity(0);

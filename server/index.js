@@ -23,49 +23,19 @@ app.get("/", (req, res) => {
 // Game constants
 MAP_SIZE = 500
 
-class Ship {
-    constructor () {
-        this.position = [0, 0];
-        this.velocity = [0, 0];
-        
-        this.tokens = []
-        this.cannon_balls = []
-    }
-
-    update () {
-        const velocity = () => {
-            if (this.position[0] + this.velocity[1] > MAP_SIZE) { 
-                this.position[0] = MAP_SIZE;
-            } else if (this.position[0] + this.velocity[0] < MAP_SIZE) {
-                this.position[0] = 0;
-            }
-
-            if (this.position[1] + this.velocity[1] > MAP_SIZE) {
-                this.position[1] = MAP_SIZE;
-            } else if (this.position[1] + this.velocity[1] < MAP_SIZE) {
-                this.position[1] = MAP_SIZE;
-            }
-        }
-
-        velocity();
-    }
-}
-
-class Ball {
-    constructor (position, direction, speed) {
-        this.position = position
-        this.velocity = ""// calc velocity
-    }
-}
+// Game classes
+const Cannon = require("./game_logic/entities/cannon.js");
+const Ship = require("./game_logic/entities/ship.js");
+const config = require("./game_logic/config.js");
 
 let SERVER_DATA;
+
 const gameInit = () => {
     SERVER_DATA = {
         players : {},
         tokens : []
     }
 }
-
 
 gameInit()
 
